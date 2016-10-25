@@ -38,7 +38,7 @@ To set up `sequences` for local development:
     make dev
 
 
-Use the `make` for a reference of the available development tools in this project.
+Use the `make` command for a reference of the available development tools in this project.
 
 
 Tips
