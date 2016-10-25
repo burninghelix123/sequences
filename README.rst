@@ -16,7 +16,7 @@ Installation
 Documentation
 =============
 
-http://docs.localhost.com/sequences/
+http://talesfrompipeline.com/docs/sequences/index.html
 
 
 Development
