@@ -13,6 +13,16 @@ Installation
 
     pip install sequences
 
+    or 
+
+    git clone https://github.com/burninghelix123/sequences.git
+    python setup.py install
+
+Tests
+=====
+    python setup.py test
+
+
 Documentation
 =============
 
@@ -26,7 +36,6 @@ To set up `sequences` for local development:
 
 1. Clone the repo locally::
 
-    cd ~/dev
     git clone https://github.com/burninghelix123/sequences.git
 
 2. Switch into the environment you want to test in::
