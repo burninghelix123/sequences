@@ -1,0 +1,45 @@
+image: dockerreg.localhost.com:5000/python:latest
+
+variables:
+  SITE_PACKAGES: "/usr/local/lib/python2.7/site-packages"
+  TMP: "/tmp"
+  P4USER: "default"
+  PIP_INDEX_URL: http://pypi.localhost.com/simple
+  PIP_TRUSTED_HOST: pypi.localhost.com
+  PIP_EXTRA_INDEX_URL: https://pypi.python.org/simple
+  PIP_CACHE_DIR: /tmp/pip-cache
+
+cache:
+    untracked: true
+    paths:
+        - /tmp/pip-cache
+
+stages:
+    - test
+    - deploy
+
+tests:
+    stage: test
+    script:
+        - pip install -r requirements_dev.txt
+        - make coverage-ci
+
+# Parallel
+deploy_pypi:
+    stage: deploy
+    only:
+        - master
+    script:
+        - make release
+
+deploy_docs:
+    stage: deploy
+    only:
+        - master
+    script:
+        - apt-get update
+        - apt-get install lftp
+        - pip install -r requirements_dev.txt
+        - make install
+        - make release-docs
+

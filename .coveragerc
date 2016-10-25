@@ -1,0 +1,12 @@
+[paths]
+source = src/sequences
+
+[run]
+branch = True
+source = src/sequences
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*

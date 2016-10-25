@@ -1,0 +1,11 @@
+# Packages required to run `make` commands
+# Do not include packages only required by packages
+# That's what setup.py is for
+wheel==0.23.0
+flake8==2.4.1
+coverage==4.0
+Sphinx==1.3.1
+sphinx_rtd_theme==0.1.8
+sphinxcontrib-napoleon==0.2.10
+scandir
+P4Python
