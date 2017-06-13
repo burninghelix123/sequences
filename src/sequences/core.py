@@ -461,7 +461,16 @@ class AbstractSequence(collections.Mapping):
 
         grouped_numbers = [as_range(x) for _, x in groupby(self.numbers, lambda x, c=count(): next(c)-x)]
         self._range = grouped_numbers
-        return grouped_numbers
+        return self._range
+
+    @property
+    def missing(self):
+        from itertools import imap, chain
+        from operator import sub
+        results = list(chain.from_iterable((self.numbers[i] + d for d in xrange(1, diff))
+            for i, diff in enumerate(imap(sub, self.numbers[1:], self.numbers))
+            if diff > 1))
+        return results
 
     def rename(self, padding=None, startFrame=None, ignoreMissing=False, replace=False, dryrun=False, progressCB=None):
         # Validate we have something to rename
@@ -712,6 +721,17 @@ class AbstractSequence(collections.Mapping):
         Returns:
             bool
         """
+        # This checks for differences in padding
+
+        if len(self.string) != len(string):
+            return False
+
+        # dirname = os.path.dirname(string)
+        # old_dirname = self.folder
+
+        # if dirname != old_dirname:
+        #     return False
+
         if not self._parsed:
             self._parse_values()
 
@@ -730,10 +750,6 @@ class AbstractSequence(collections.Mapping):
         # match = re.match(pat, string)
         # if not match:
         #     return False
-
-        # This checks for differences in padding
-        if len(self.string) != len(string):
-            return False
 
         return True
 
@@ -1632,23 +1648,23 @@ def scan_for_files(path, recursive=False, groupFolders=False, _result=None):
     return _result
 
 
-def flatten_sequences(paths, validateExists=False):
+def flatten_sequences(paths, validateExists=False, normalizeInput=False):
     """
     Flatten Sequences from a list of paths
     """
-    results = []
+    results = {}
     while paths:
         path = paths.pop()
         # Check if path is a sequence
         try:
-            seq = FileSequence(path, validateExists=validateExists, normalizeInput=False)
+            seq = FileSequence(path, validateExists=validateExists, normalizeInput=normalizeInput)
         except Exception:
-            results.append(path)
+            results[path] = None
             continue
 
         new_path = seq.get_pound_string()
         if new_path not in results:
-            results.append(new_path)
+            results[new_path] = seq
 
         # Filter out other paths of sequence
         for path in paths:
