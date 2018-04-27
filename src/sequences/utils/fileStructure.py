@@ -462,6 +462,7 @@ class PerforcePath(FilestructurePath):
 
     def checkout(self):
         if self.isfile:
+
             result = self.p4.run_edit(self.path)
         else:
             path = self.path
@@ -553,7 +554,7 @@ class PerforcePath(FilestructurePath):
 
         # supplement with disk children
         diskItems = []
-        if self.exists:
+        if self.exists():
             kwargs = dict(
                 includeFiles=includeFiles,
                 includeDirs=includeDirs,
@@ -580,7 +581,7 @@ class PerforcePath(FilestructurePath):
 
         if not forceP4:
             self.sync()
-        if forceP4 or not self.exists:
+        if forceP4 or not self.exists():
             result = self.p4.run_print('-q', self.path)
             if isinstance(result, list):
                 r = result[1]
@@ -590,7 +591,7 @@ class PerforcePath(FilestructurePath):
                     return r
             else:
                 return result
-        elif self.exists:
+        elif self.exists():
             try:
                 with open(self.local_path, 'rb') as fp:
                     contents = fp.read()

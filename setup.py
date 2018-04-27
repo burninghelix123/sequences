@@ -38,9 +38,6 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description='Matches and provied various functionality for strings and paths with sequence numbers',
-    long_description="%s" % (
-        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
-    ),
     license="MIT",
     author='Craig Barnett',
     author_email='cbarnett@talesfrompipeline.com',

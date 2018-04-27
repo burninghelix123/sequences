@@ -38,7 +38,7 @@ deploy_docs:
         - master
     script:
         - apt-get update
-        - apt-get install lftp
+        - apt-get install lftp -y
         - pip install -r requirements_dev.txt
         - make install
         - make release-docs

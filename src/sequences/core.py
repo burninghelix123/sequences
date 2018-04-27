@@ -482,10 +482,10 @@ class AbstractSequence(collections.Mapping):
         elif startFrame is None and int(padding) == int(self.padding):
             LOG.debug("Sequence padding already matches, nothing to rename")
             return
-        elif padding is None and int(startFrame) == int(self.firstNumber):
+        elif padding is None and int(startFrame) == int(self.firstItemNumber):
             LOG.warning("Sequence startframe already matches, nothing to rename")
             return
-        elif int(padding) == int(self.padding) and int(startFrame) == int(self.firstNumber):
+        elif int(padding) == int(self.padding) and int(startFrame) == int(self.firstItemNumber):
             LOG.warning("Sequence already matches, nothing to rename")
             return
         if not ignoreMissing and len(self.range) > 1:
