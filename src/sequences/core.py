@@ -65,7 +65,8 @@ SEQUENCE_FORMAT_TYPES = [
     'pounds',
     'regex',
     'formatstring',
-    'percent'
+    'percent',
+    'dollar',
 ]
 
 # Profiling
