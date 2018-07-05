@@ -38,6 +38,7 @@ DEFAULT_SEQUENCE_PATTERN = re.compile(
         '|(?P<regex>\\\\d{\d+})'
         '|(?P<formatstring>{\w+:\d+d})'
         '|(?P<percent>%\d+d)'
+        '|(?P<dollar>\$F\d+)'
     ')$'
 )  # NOQA
 
@@ -50,6 +51,7 @@ DEFAULT_FILE_SEQUENCE_PATTERN = re.compile(
             '|(?P<regex>\\\\d{\d+})'
             '|(?P<formatstring>{\w+:\d+d})'
             '|(?P<percent>%\d+d)'
+            '|(?P<dollar>\$F\d+)'
         ')'
         '(?P<suffix>.*'
             '(?P<ext>\.\S+$)'
@@ -563,6 +565,8 @@ class AbstractSequence(collections.Mapping):
                 newPath = self.get_format_string(padding=padding)
             elif self._format_type == 'percent':
                 newPath = self.get_percent_string(padding=padding)
+            elif self._format_type == 'dollar':
+                newPath = self.get_dollar_string(padding=padding)
             else:
                 raise ValueError("Invalid Format Type Found")
             self.setSource(newPath)
@@ -611,6 +615,30 @@ class AbstractSequence(collections.Mapping):
         substr = '#'*int(padding)
         result = substr.join(self._base_sequence_items)
         return result
+
+    def get_dollar_string(self, padding=None):
+        """
+        Return the sequence with the sequence numbers replaced with $F
+        Ex:
+            aaa010.00001.png
+            ->
+            aaa010.$F5.png
+
+        Args:
+            padding (int, optional): Custom padding level to use
+                If not supplied, uses the padding from the input sequence
+
+        Returns:
+            str
+        """
+        if not self.parsed:
+            self._parse_values()
+        if padding is None:
+            padding = self.padding
+        substr = '$F{0}'.format(padding)
+        result = substr.join(self._base_sequence_items)
+        return result
+
 
     def get_format_string(self, padding=None, formatKey=None):
         """
@@ -900,6 +928,9 @@ class AbstractSequence(collections.Mapping):
         elif formatType == 'pounds':
             return len(matchGrps['pounds'])
 
+        elif formatType == 'dollar':
+            return len(matchGrps['dollar'])
+
         elif formatType == 'regex':
             match = matchGrps['regex'].lstrip('\d+{{').rstrip('}}')
             return int(match)
@@ -989,6 +1020,7 @@ class BaseSequence(AbstractSequence, collections.MutableMapping):
                 Ex:
                     mySequence.00001                (Numbers)
                     mySequence.#####                (Pound String)
+                    mySequence.$F5                  (Dollar String)
                     mySequence.{FORMATKEY:05d}      (Format String) (Internal)
                     mySequence.%05d                 (Percent String)
                     mySequence.\d{5}                (Regex Pattern)
@@ -1070,6 +1102,7 @@ class FileSequence(AbstractSequence):
                     Ex:
                         mySequence.00001                (Numbers)
                         mySequence.#####                (Pound String)
+                        mySequence.$F5                  (Dollar String)
                         mySequence.{FORMATKEY:05d}      (Format String) (Internal)
                         mySequence.%05d                 (Percent String)
                         mySequence.\d{5}                (Regex Pattern)
