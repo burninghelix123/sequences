@@ -929,7 +929,8 @@ class AbstractSequence(collections.Mapping):
             return len(matchGrps['pounds'])
 
         elif formatType == 'dollar':
-            return len(matchGrps['dollar'])
+            match = matchGrps['dollar'].lstrip('$F')
+            return int(match)
 
         elif formatType == 'regex':
             match = matchGrps['regex'].lstrip('\d+{{').rstrip('}}')
